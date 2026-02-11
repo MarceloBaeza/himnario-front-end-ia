@@ -2,7 +2,7 @@
  * Implementación del repositorio de himnos que lee desde assets estáticos.
  *
  * SUPUESTO FASE 1: No existe backend. Los himnos viven como archivos JSON
- * en /src/assets/himnos/. El índice (index.json) es obligatorio porque
+ * en /public/himnos/ (copiados a /himnos/ en build). El índice (index.json) es obligatorio porque
  * no se pueden listar directorios en runtime en el navegador.
  *
  * Preparado para migración futura: solo esta clase necesita cambiar
@@ -28,7 +28,7 @@ async function fetchJson(url: string): Promise<unknown> {
 export class AssetsHymnRepository implements IHymnRepository {
   private readonly basePath: string;
 
-  constructor(basePath = '/src/assets/himnos') {
+  constructor(basePath = '/himnos') {
     this.basePath = basePath;
   }
 
