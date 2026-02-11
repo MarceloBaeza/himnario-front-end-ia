@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Focus visible global - garantiza contraste AA */
+@layer base {
+  :root {
+    --color-focus-ring: #b91c1c; /* primary-700 */
+  }
+
+  /* Asegurar scroll suave */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus visible para elementos interactivos que no tengan su propio estilo */
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Reset de focus para mouse (no accesibilidad de teclado) */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Texto legible por defecto */
+  body {
+    @apply text-neutral-900 bg-neutral-50;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Modo oscuro: texto claro sobre fondo oscuro */
+  .dark body {
+    @apply text-neutral-100 bg-neutral-900;
+  }
+}

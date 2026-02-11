@@ -1,0 +1,50 @@
+[
+  {
+    "id": "001-sublime-gracia",
+    "title": "Sublime Gracia",
+    "author": "John Newton",
+    "file": "001-sublime-gracia.json"
+  },
+  {
+    "id": "002-castillo-fuerte",
+    "title": "Castillo Fuerte Es Nuestro Dios",
+    "author": "Martín Lutero",
+    "file": "002-castillo-fuerte.json"
+  },
+  {
+    "id": "003-grande-es-tu-fidelidad",
+    "title": "Grande Es Tu Fidelidad",
+    "author": "Thomas O. Chisholm",
+    "file": "003-grande-es-tu-fidelidad.json"
+  },
+  {
+    "id": "004-cuán-grande-es-el",
+    "title": "Cuán Grande Es Él",
+    "author": "Stuart K. Hine",
+    "file": "004-cuan-grande-es-el.json"
+  },
+  {
+    "id": "005-santo-santo-santo",
+    "title": "Santo, Santo, Santo",
+    "author": "Reginald Heber",
+    "file": "005-santo-santo-santo.json"
+  },
+  {
+    "id": "006-alabare-al-senor",
+    "title": "Alabaré al Señor",
+    "author": "Hillsong Worship",
+    "file": "006-alabare-al-senor.json"
+  },
+  {
+    "id": "007-es-nuestro-dios",
+    "title": "Es nuestro Dios",
+    "author": "",
+    "file": "007-es-nuestro-dios.json"
+  },
+  {
+    "id": "008-hay-una-fuente",
+    "title": "Hay una fuente",
+    "author": "",
+    "file": "008-hay-una-fuente.json"
+  }
+]
