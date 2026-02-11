@@ -46,5 +46,29 @@
     "title": "Hay una fuente",
     "author": "",
     "file": "008-hay-una-fuente.json"
+  },
+  {
+    "id": "009-comprado-por-sangre",
+    "title": "Comprado por sangre",
+    "author": "",
+    "file": "009-comprado-por-sangre.json"
+  },
+  {
+    "id": "010-su-gracia-es-mayor",
+    "title": "Su gracia es mayor",
+    "author": "",
+    "file": "010-su-gracia-es-mayor.json"
+  },
+  {
+    "id": "011-a-quien-ire",
+    "title": "A quién iré",
+    "author": "",
+    "file": "011-a-quien-ire.json"
+  },
+  {
+    "id": "012-alabanzas-dad-a-cristo",
+    "title": "Alabanzas dad a Cristo",
+    "author": "",
+    "file": "012-alabanzas-dad-a-cristo.json"
   }
 ]
