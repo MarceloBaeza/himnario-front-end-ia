@@ -93,7 +93,7 @@ export function FontSizeControl({ fontSizeState }: FontSizeControlProps) {
           'dark:focus-visible:ring-offset-neutral-900',
         ].join(' ')}
       >
-        Reset
+        Restablecer
       </button>
     </div>
   );
