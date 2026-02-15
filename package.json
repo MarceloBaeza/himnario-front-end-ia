@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "start-dev": "vite preview --port 3000",
-    "start": "serve dist -s -l 3000"
+    "start": "node server.js"
   },
   "dependencies": {
     "react": "^19.0.0",
