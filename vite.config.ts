@@ -2,11 +2,14 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-const driveProxy = {
-  '/api/drive': {
-    target: 'https://www.googleapis.com',
+/** Proxy hacia el backend Himnario (desarrollo local).
+ *  El target se lee de BACKEND_URL (variable de entorno de Node, sin prefijo VITE_,
+ *  por lo que NO se expone al navegador). */
+const backendProxy = {
+  '/api/backend': {
+    target: process.env['BACKEND_URL'] ?? 'http://localhost:8080',
     changeOrigin: true,
-    rewrite: (p: string) => p.replace(/^\/api\/drive/, '/drive/v3/files'),
+    rewrite: (p: string) => p.replace(/^\/api\/backend/, ''),
   },
 };
 
@@ -20,10 +23,10 @@ export default defineConfig({
   },
   server: {
     allowedHosts: true,
-    proxy: driveProxy,
+    proxy: { ...backendProxy },
   },
   preview: {
-    proxy: driveProxy,
+    proxy: { ...backendProxy },
   },
   test: {
     globals: true,

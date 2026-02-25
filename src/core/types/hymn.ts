@@ -17,7 +17,8 @@ export interface HymnIndexEntry {
   id: string;
   title: string;
   author?: string;
-  file: string;
+  /** Solo presente en la implementación de assets estáticos. Ausente en la API REST. */
+  file?: string;
 }
 
 /** Estado de carga genérico */

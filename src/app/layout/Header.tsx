@@ -1,14 +1,12 @@
 /**
  * Header principal de la aplicación.
- * Contiene el logo, nombre de la iglesia, navegación principal y toggle de tema.
- * Accesible: navegación con landmarks apropiados, focus visible.
+ * Contiene logo, navegación, controles de auth y toggle de tema.
  */
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Logo } from '@/components/ui';
-import { useTheme } from '@/core/hooks';
+import { useTheme, useAuth } from '@/core/hooks';
 
-/** Icono de luna para activar modo oscuro */
 function MoonIcon() {
   return (
     <svg
@@ -27,7 +25,6 @@ function MoonIcon() {
   );
 }
 
-/** Icono de sol para activar modo claro */
 function SunIcon() {
   return (
     <svg
@@ -54,8 +51,45 @@ function SunIcon() {
   );
 }
 
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  [
+    'px-3 py-2 rounded-md text-sm font-medium transition-colors',
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-primary-800',
+    isActive
+      ? 'bg-primary-700 text-white'
+      : 'text-primary-100 hover:bg-primary-700 hover:text-white',
+  ].join(' ');
+
+const iconBtnClass = [
+  'inline-flex items-center justify-center w-9 h-9 rounded-md',
+  'text-primary-100 hover:bg-primary-700 hover:text-white',
+  'transition-colors duration-150',
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-primary-800',
+].join(' ');
+
+const iconNavLinkClass = ({ isActive }: { isActive: boolean }) =>
+  [
+    'inline-flex items-center justify-center w-9 h-9 rounded-md transition-colors duration-150',
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-primary-800',
+    isActive
+      ? 'bg-primary-700 text-white'
+      : 'text-primary-100 hover:bg-primary-700 hover:text-white',
+  ].join(' ');
+
 export function Header() {
   const { isDark, toggle } = useTheme();
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const canCreateHymn =
+    isAuthenticated && user !== null && (user.role === 'admin' || user.role === 'editor');
+
+  const canManageUsers = isAuthenticated && user !== null && user.role === 'admin';
+
+  const handleLogout = () => {
+    logout();
+    navigate('/', { replace: true });
+  };
 
   return (
     <header className="bg-primary-800 text-white shadow-lg" role="banner">
@@ -82,41 +116,116 @@ export function Header() {
 
         {/* Controles de navegación y tema */}
         <div className="flex items-center gap-2">
-          {/* Navegación principal */}
           <nav aria-label="Navegación principal">
             <ul className="flex items-center gap-1" role="list">
               <li>
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    [
-                      'px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-primary-800',
-                      isActive
-                        ? 'bg-primary-700 text-white'
-                        : 'text-primary-100 hover:bg-primary-700 hover:text-white',
-                    ].join(' ')
-                  }
-                  end
-                >
+                <NavLink to="/" className={navLinkClass} end>
                   Himnos
                 </NavLink>
               </li>
+
+              {/* Nuevo himno — visible solo para admin/editor */}
+              {canCreateHymn && (
+                <li>
+                  <NavLink
+                    to="/himno/nuevo"
+                    className={iconNavLinkClass}
+                    title="Nuevo himno"
+                    aria-label="Crear nuevo himno"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-4 h-4"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 18V5l12-2v13" />
+                      <circle cx="6" cy="18" r="3" />
+                      <circle cx="18" cy="16" r="3" />
+                    </svg>
+                  </NavLink>
+                </li>
+              )}
+
+              {/* Nuevo usuario — visible solo para admin */}
+              {canManageUsers && (
+                <li>
+                  <NavLink
+                    to="/admin/usuarios/nuevo"
+                    className={iconNavLinkClass}
+                    title="Nuevo usuario"
+                    aria-label="Crear nuevo usuario"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-4 h-4"
+                      aria-hidden="true"
+                    >
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <line x1="19" y1="8" x2="19" y2="14" />
+                      <line x1="22" y1="11" x2="16" y2="11" />
+                    </svg>
+                  </NavLink>
+                </li>
+              )}
             </ul>
           </nav>
 
-          {/* Toggle de tema oscuro/claro */}
+          {/* Auth: nombre de usuario + logout, o botón login */}
+          {isAuthenticated && user !== null ? (
+            <div className="flex items-center gap-2">
+              <span
+                className="hidden sm:block text-xs text-primary-200 max-w-[120px] truncate"
+                title={user.name}
+                aria-label={`Sesión iniciada como ${user.name}`}
+              >
+                {user.name}
+              </span>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className={[
+                  'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+                  'text-primary-100 hover:bg-primary-700 hover:text-white',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-primary-800',
+                ].join(' ')}
+                aria-label="Cerrar sesión"
+              >
+                Salir
+              </button>
+            </div>
+          ) : (
+            <NavLink
+              to="/login"
+              className={[
+                'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+                'text-primary-100 hover:bg-primary-700 hover:text-white',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-primary-800',
+              ].join(' ')}
+            >
+              Ingresar
+            </NavLink>
+          )}
+
+          {/* Toggle de tema */}
           <button
             type="button"
             onClick={toggle}
             aria-label={isDark ? 'Activar modo claro' : 'Activar modo oscuro'}
             title={isDark ? 'Activar modo claro' : 'Activar modo oscuro'}
-            className={[
-              'inline-flex items-center justify-center w-9 h-9 rounded-md',
-              'text-primary-100 hover:bg-primary-700 hover:text-white',
-              'transition-colors duration-150',
-              'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-primary-800',
-            ].join(' ')}
+            className={iconBtnClass}
           >
             {isDark ? <SunIcon /> : <MoonIcon />}
           </button>

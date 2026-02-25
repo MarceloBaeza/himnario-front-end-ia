@@ -10,7 +10,7 @@ export const hymnIndexEntrySchema = z.object({
   id: z.string().min(1, 'El id no puede estar vacío'),
   title: z.string().min(1, 'El título no puede estar vacío'),
   author: z.string().optional(),
-  file: z.string().min(1, 'El nombre de archivo no puede estar vacío'),
+  file: z.string().min(1).optional(),
 });
 
 export const hymnIndexSchema = z.array(hymnIndexEntrySchema);

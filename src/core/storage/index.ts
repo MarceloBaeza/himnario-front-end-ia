@@ -16,3 +16,11 @@ export {
   readTheme,
   writeTheme,
 } from './themeStorage';
+
+export {
+  readToken,
+  writeToken,
+  readUser,
+  writeUser,
+  clearAuth,
+} from './authStorage';

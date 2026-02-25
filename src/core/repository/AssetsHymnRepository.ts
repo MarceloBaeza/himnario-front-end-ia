@@ -54,6 +54,10 @@ export class AssetsHymnRepository implements IHymnRepository {
       throw new Error(`Himno con id "${id}" no encontrado en el índice`);
     }
 
+    if (entry.file === undefined) {
+      throw new Error(`El himno "${id}" no tiene archivo de asset asociado`);
+    }
+
     const raw = await fetchJson(`${this.basePath}/${entry.file}`);
     const result = hymnSchema.safeParse(raw);
 
