@@ -124,3 +124,19 @@ export async function apiPost<T>(
   });
   return unwrap<T>(response);
 }
+
+export async function apiPut<T>(
+  path: string,
+  body: unknown,
+  token?: string
+): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, {
+    method: 'PUT',
+    headers: {
+      ...baseHeaders(token),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  return unwrap<T>(response);
+}

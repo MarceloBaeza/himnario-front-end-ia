@@ -4,22 +4,52 @@
  * El hook useAuth está en src/core/hooks/useAuth.ts.
  */
 
-import { useState, useCallback, type ReactNode } from 'react';
+import { useState, useCallback, useEffect, type ReactNode } from 'react';
 import type { User } from '../types/auth';
-import { login as loginApi, register as registerApi } from '../api/authApi';
-import type { LoginCredentials, RegisterData } from '../api/authApi';
+import { login as loginApi } from '../api/authApi';
+import type { LoginCredentials } from '../api/authApi';
 import {
   readToken,
   writeToken,
   readUser,
   writeUser,
   clearAuth,
+  isTokenExpired,
 } from '../storage/authStorage';
 import { AuthContext } from './authContextDef';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => readUser());
-  const [token, setToken] = useState<string | null>(() => readToken());
+  const [user, setUser] = useState<User | null>(() => {
+    const storedToken = readToken();
+    if (storedToken !== null && isTokenExpired(storedToken)) {
+      clearAuth();
+      return null;
+    }
+    return readUser();
+  });
+  const [token, setToken] = useState<string | null>(() => {
+    const storedToken = readToken();
+    if (storedToken !== null && isTokenExpired(storedToken)) return null;
+    return storedToken;
+  });
+
+  // Detectar token expirado cuando el usuario vuelve a la pestaña
+  useEffect(() => {
+    function checkExpiry() {
+      const storedToken = readToken();
+      if (storedToken !== null && isTokenExpired(storedToken)) {
+        setUser(null);
+        setToken(null);
+        clearAuth();
+      }
+    }
+    window.addEventListener('focus', checkExpiry);
+    document.addEventListener('visibilitychange', checkExpiry);
+    return () => {
+      window.removeEventListener('focus', checkExpiry);
+      document.removeEventListener('visibilitychange', checkExpiry);
+    };
+  }, []);
 
   const login = useCallback(async (credentials: LoginCredentials) => {
     const result = await loginApi(credentials);
@@ -27,10 +57,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(result.token);
     writeUser(result.user);
     writeToken(result.token);
-  }, []);
-
-  const register = useCallback(async (data: RegisterData) => {
-    await registerApi(data);
   }, []);
 
   const logout = useCallback(() => {
@@ -46,7 +72,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         token,
         isAuthenticated: user !== null && token !== null,
         login,
-        register,
         logout,
       }}
     >

@@ -31,3 +31,23 @@ export function clearAuth(): void {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(AUTH_USER_KEY);
 }
+
+/**
+ * Decodifica el payload de un JWT y verifica si ya expiró.
+ * No valida la firma — eso es responsabilidad del backend.
+ * Retorna true si el token expiró o no se puede parsear.
+ */
+export function isTokenExpired(token: string): boolean {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return true;
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload: unknown = JSON.parse(atob(base64));
+    if (typeof payload !== 'object' || payload === null) return true;
+    const exp = (payload as Record<string, unknown>)['exp'];
+    if (typeof exp !== 'number') return false; // sin claim exp → sin expiración
+    return Date.now() / 1000 > exp;
+  } catch {
+    return true;
+  }
+}

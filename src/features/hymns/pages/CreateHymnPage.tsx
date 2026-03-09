@@ -8,6 +8,7 @@ import type { SyntheticEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/core/hooks';
 import { createHymn, ApiError } from '@/core/api';
+import { Toast } from '@/components/ui';
 
 export function CreateHymnPage() {
   const { user, token } = useAuth();
@@ -20,6 +21,7 @@ export function CreateHymnPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
 
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,7 +53,8 @@ export function CreateHymnPage() {
         { title: title.trim(), content, user: { email: user.email, name: user.name } },
         token
       );
-      navigate('/', { replace: true });
+      setToastVisible(true);
+      setTimeout(() => { navigate('/', { replace: true }); }, 1500);
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.fields !== undefined && Object.keys(err.fields).length > 0) {
@@ -261,6 +264,8 @@ export function CreateHymnPage() {
           </Link>
         </div>
       </form>
+
+      <Toast message="Himno creado con éxito" visible={toastVisible} />
     </article>
   );
 }

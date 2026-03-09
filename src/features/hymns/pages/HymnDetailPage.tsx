@@ -16,7 +16,7 @@ import { useHymnDetail } from '../hooks';
 import { FontSizeControl } from '../components/FontSizeControl';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
-import { useFontSize } from '@/core/hooks';
+import { useFontSize, useAuth } from '@/core/hooks';
 
 export function HymnDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -24,6 +24,8 @@ export function HymnDetailPage() {
 
   const { hymn, loadingState, error, retry } = useHymnDetail(hymnId);
   const fontSizeState = useFontSize();
+  const { user } = useAuth();
+  const canEdit = user !== null && (user.role === 'admin' || user.role === 'editor');
 
   return (
     <article aria-labelledby="hymn-title">
@@ -88,8 +90,35 @@ export function HymnDetailPage() {
                 )}
               </div>
 
-              {/* Control de tamaño de fuente */}
-              <div className="flex-shrink-0">
+              {/* Controles: editar (admin/editor) y tamaño de fuente */}
+              <div className="flex-shrink-0 flex items-center gap-2">
+                {canEdit && (
+                  <Link
+                    to={`/hymn/${hymnId}/edit`}
+                    className={[
+                      'inline-flex items-center gap-1.5 py-1.5 px-3 rounded-md text-sm font-medium',
+                      'text-neutral-700 dark:text-neutral-300',
+                      'border border-neutral-300 dark:border-neutral-600',
+                      'hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2',
+                    ].join(' ')}
+                    aria-label="Editar himno"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      className="w-4 h-4"
+                      aria-hidden="true"
+                    >
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                    Editar
+                  </Link>
+                )}
                 <FontSizeControl fontSizeState={fontSizeState} />
               </div>
             </div>

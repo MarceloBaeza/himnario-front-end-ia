@@ -8,8 +8,8 @@
 
 import { createBrowserRouter } from 'react-router-dom';
 import { AppLayout } from './layout';
-import { HymnListPage, HymnDetailPage, NotFoundPage, CreateHymnPage } from '@/features/hymns';
-import { LoginPage, RegisterPage, CreateUserPage } from '@/features/auth';
+import { HymnListPage, HymnDetailPage, NotFoundPage, CreateHymnPage, EditHymnPage } from '@/features/hymns';
+import { LoginPage, CreateUserPage } from '@/features/auth';
 import { ProtectedRoute } from './components';
 
 export const router = createBrowserRouter([
@@ -26,12 +26,16 @@ export const router = createBrowserRouter([
         element: <HymnDetailPage />,
       },
       {
-        path: 'login',
-        element: <LoginPage />,
+        path: 'hymn/:id/edit',
+        element: (
+          <ProtectedRoute requiredRoles={['admin', 'editor']}>
+            <EditHymnPage />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: 'register',
-        element: <RegisterPage />,
+        path: 'login',
+        element: <LoginPage />,
       },
       {
         path: 'himno/nuevo',

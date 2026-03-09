@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import type { SyntheticEvent } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/core/hooks';
 import { ApiError } from '@/core/api';
 
@@ -124,15 +124,6 @@ export function LoginPage() {
         </button>
       </form>
 
-      <p className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
-        ¿No tienes cuenta?{' '}
-        <Link
-          to="/register"
-          className="text-primary-700 dark:text-primary-400 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 rounded"
-        >
-          Regístrate
-        </Link>
-      </p>
     </div>
   );
 }
